@@ -56,9 +56,11 @@ Recommendations:
 
 Examples:
 
-- `playtracker.sneaking`
-- `playtracker.sneaking.stopped`
-- `playtracker.talked_to_villager`
+- Bad: `PlaytrackerIgnore`
+- Bad: `playtracker_ignore`
+- Good: `playtracker.ignore`
+- Good: `playtracker.talked_to_villager`
+- Good: `playtracker.sneaking.stopped`
 
 ### 2b. Namespace custom item tags
 
@@ -100,6 +102,7 @@ Rationale:
 
 - Effectively eliminates\* the chance of scoreboard objective conflicts with other compliant modules.
 - Drastically reduces the chance of scoreboard objective conflicts with packs that do not follow any standards.
+- Introduces a level of scope to scoreboard operations, allowing fake-player variable names to be shortened.
 
 Caveats:
 
@@ -108,12 +111,18 @@ Caveats:
 Recommendations:
 
 - Use a scorespace that is easily associated with the full namespace of the module. Avoid abbreviations that are too short or generic.
+- Do not assume that just because the objective is named something obvious it will not be (mis)used by other packs. For example: the objective `global` is commonly used to register global variables, but this is precisely what makes it all the more susceptible to conflicts. A compliant module will use its own objective, such as `<scorespace>.global`, to both avoid conflicts and shorten the names of fake-players.
 
 Examples:
 
-- `ptrak.deathtime`
-- `ptrak.sincerest`
-- `ptrak.usebow`
+- Bad: `global`
+- Bad: `temp`
+- Bad: `const`
+- Bad: `ptrak_config`
+- Good: `ptrak.config`
+- Good: `ptrak.deathtime`
+- Good: `ptrak.sincerest`
+- Good: `ptrak.usebow`
 
 ### 2d. Namespace NBT storage locations
 
@@ -136,5 +145,9 @@ Recommendations:
 
 Examples:
 
-- `playtracker:config`
-- `playtracker.__temp__:player/on_sneak`
+- Bad: `global`
+- Bad: `main`
+- Bad: `config`
+- Bad: `config:playtracker`
+- Good: `playtracker:config`
+- Good: `playtracker.__temp__:player/on_sneak`
