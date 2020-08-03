@@ -8,7 +8,7 @@
 
 ## Documentation format
 
-The [IMP Documentation Format](./docs/imp_doc.md) is recommended for maintaining well-documented functions.
+The [IMP Documentation Format](./imp_doc.md) is recommended for maintaining well-documented functions.
 
 ## Storage
 
