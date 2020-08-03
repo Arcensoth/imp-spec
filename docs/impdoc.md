@@ -1,6 +1,4 @@
-# IMP: Documentation Format
-
-> This document is a **work-in-progress** and still requires changes with respect to Minecraft 1.15+ and the [IMP datapack](https://github.com/Arcensoth/imp-datapack).
+# IMP Documentation Format (IMP-Doc)
 
 - [Function headers][function-headers]
 - [Function annotations][function-annotations]
@@ -15,10 +13,6 @@
     - [for scoreboard][function-annotations-input-and-output-for-scoreboard]
     - [for storage][function-annotations-input-and-output-for-storage]
   - [`@reads` and `@writes`][function-annotations-reads-and-writes]
-- [Storage recommendations][storage-recommendations]
-  - [Storage tag types][storage-tag-types]
-  - [Separate namespace for transient storage][separate-namespace-for-transient-storage]
-  - [Root tags for transient storage][root-tags-for-transient-storage]
 
 The goal is to create a documentation format for functions that:
 
@@ -276,9 +270,9 @@ For storage, we use the form `storage <storage_name> <root_tag>` for the same re
 
 1. The `<root_tag>` here is the implied prefix/parent tag for each of the nested parameters.
 2. The reason the `<root_tag>` is separate is because NBT and can be nested and repeating the root tag would be repetitive.
-3. We include an additional line before the description to denote the tag's [expected type][storage-tag-types] in NBT.
+3. We include an additional line before the description to denote the tag's expected type in NBT.
 
-There are some additional recommendations ahead, but here's what the basic form looks like:
+Here's what the basic form looks like:
 
 ```mcfunction
 # @input
@@ -294,17 +288,7 @@ There are some additional recommendations ahead, but here's what the basic form 
 #           The resulting full name of the person.
 ```
 
-However, there are some additional recommendations when using `storage` for this purpose:
-
-1. The storage name should have a 1:1 correlation to the function name.
-   - Example: `storage mypack:utils/get_full_name`
-   - This helps to avoid ambiguity and makes it clear where each storage is being created.
-   - It also helps to avoid one function from accidentally accessing the data of another.
-2. Use a [separate namespace][separate-namespace-for-transient-storage] ending in `.__temp__` for all transient storage.
-   - Example: `storage mypack.__temp__:utils/get_full_name`
-3. Due to the limitations of selecting root NBT paths, it is also recommended to use separate [transient root tags][root-tags-for-transient-storage] for input vs output data.
-
-Putting it all together, here's what the final form looks like:
+With some [additional recommendations](./imp_con.md#storage), here's what the final form looks like:
 
 ```mcfunction
 # @input
@@ -347,7 +331,7 @@ Here's a brief example:
 #           IDs of modules that need to be (re-)installed.
 ```
 
-Note that this example is making use of another [transient root tag][root-tags-for-transient-storage]: `__temp__`.
+Note that this example is making use of another transient root tag: `__temp__`.
 
 However, since not all storage is transient storage, it may be worthwhile to also list any persistent storage that's being accessed:
 
@@ -363,51 +347,6 @@ However, since not all storage is transient storage, it may be worthwhile to als
 #           The registry of all recorded modules.
 ```
 
-## Storage recommendations
-
-### Storage tag types
-
-There are several standard atomic tag types defined. These all match their NBT equivalent:
-
-- `byte`
-- `short`
-- `int`
-- `long`
-- `float`
-- `double`
-- `string`
-
-There are some other names for commonly-used patterns:
-
-- `bool` is an `int` that's either `true` (`1b`) or `false` (`0b`)
-- `RawTextComponent` is a raw JSON text component `string`
-- `Command` is a command `string`
-
-Anything ending in `[]` is an array:
-
-- `int[]` is an array of `int`s
-- `Command[]` is an array of command `string`s
-
-There is currently no standard format for specifying nested types via compound tags, however it is recommended to give them unique, identifiable names. For example, the `Module` compound is a common data structure used in IMP to record information about a datapack module.
-
-### Separate namespace for transient storage
-
-Transient storage includes anything involving argument passing, return values, and intermediate calculations, that need only be preserved in the current scope or tick.
-
-Using a separate namespace for this type of storage allows us to separate important, persistent data from everything else. It also allows us to safely purge or delete any storage files following this naming scheme.
-
-The recommended standard for naming transient storage is by appending `.__temp__` to the namespace of the storage. For example, the namespace `imp.__temp__` is used for all of IMP's argument passing, return values, and intermediate calculation storage.
-
-### Root tags for transient storage
-
-Transient root tags are used primarily to work-around certain limitations with selecting root NBT paths. However, they also double as an obvious visual indicator for common patterns when using storage.
-
-These are the recommended standard root tag names for transient data:
-
-- `__input__` for supplying arguments, such as with `@input`.
-- `__output__` for returning values, such as with `@output`.
-- `__temp__` for intermediate calculations involving NBT, such as resolving strings and iterating over NBT lists.
-
 [function-headers]: #function-headers
 [function-annotations]: #function-annotations
 [function-annotation-user]: #function-annotation-user
@@ -421,7 +360,3 @@ These are the recommended standard root tag names for transient data:
 [function-annotations-input-and-output-for-scoreboard]: #function-annotations-input-and-output-for-scoreboard
 [function-annotations-input-and-output-for-storage]: #function-annotations-input-and-output-for-storage
 [function-annotations-reads-and-writes]: #function-annotations-reads-and-writes
-[storage-recommendations]: #storage-recommendations
-[storage-tag-types]: #storage-tag-types
-[separate-namespace-for-transient-storage]: #separate-namespace-for-transient-storage
-[root-tags-for-transient-storage]: #root-tags-for-transient-storage

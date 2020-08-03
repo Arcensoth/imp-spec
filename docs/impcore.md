@@ -1,4 +1,4 @@
-# IMP: Core Standards
+# IMP Core Standards (IMP-Core)
 
 These are the bare minimum standards for a datapack module to be considered IMP-compliant.
 
